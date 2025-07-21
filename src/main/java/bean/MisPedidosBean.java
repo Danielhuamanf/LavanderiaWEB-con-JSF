@@ -23,31 +23,19 @@ public class MisPedidosBean implements Serializable {
     private List<PedidoDTO> pedidosActivos;
     private List<PedidoDTO> pedidosCancelados;
     private UsuarioDTO usuarioLogueado;
-    
-    @PostConstruct
-    public void init() {
-        // Verificar que el usuario esté autenticado
-        usuarioLogueado = (UsuarioDTO) FacesContext.getCurrentInstance()
-                .getExternalContext().getSessionMap().get("usuario");
-        
-        if (usuarioLogueado == null) {
-            try {
-                // Redireccionar a login si no hay usuario en sesión
-                FacesContext.getCurrentInstance().getExternalContext()
-                        .redirect("login.xhtml");
-            } catch (IOException e) {
-                System.err.println("Error al redireccionar al login: " + e.getMessage());
-            }
-            return;
-        }
-        
+
+    public MisPedidosBean() {
         cargarPedidos();
     }
+    
+   
     
     /**
      * Carga los pedidos del usuario logueado separados por estado
      */
     private void cargarPedidos() {
+        usuarioLogueado = (UsuarioDTO) FacesContext.getCurrentInstance()
+                .getExternalContext().getSessionMap().get("usuario");
         PedidoDAO pedidoDAO = new PedidoDAOImpl();
         
         // Cargar pedidos activos (Pendiente, En proceso, Listo para entrega, Entregado)

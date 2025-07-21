@@ -173,9 +173,7 @@
             <h1 class="registro-title">Regístrate</h1>
             <p class="registro-subtitle">Crea tu cuenta en Lavandería Express</p>
             
-            <!-- Mensajes globales -->
-            <p:messages id="messages" showDetail="false" closable="true" />
-            
+
             <!-- Campo Nombre Completo -->
             <div class="field-group">
                 <label class="field-label" for="nombre">
@@ -185,7 +183,8 @@
                             value="#{registroBean.nombre}" 
                             required="true"
                             requiredMessage="El nombre completo es obligatorio"
-                            placeholder="Ingrese su nombre completo">
+                            placeholder="Ingrese su nombre completo"
+                            validatorMessage="Su nombre no cumple con formato valido">
                     <f:validateLength minimum="2" maximum="100" />
                 </p:inputText>
                 <p:message for="nombre" display="text" />
@@ -200,7 +199,8 @@
                             value="#{registroBean.correo}" 
                             required="true"
                             requiredMessage="El correo electrónico es obligatorio"
-                            placeholder="ejemplo@correo.com">
+                            placeholder="ejemplo@correo.com"
+                            validatorMessage="El correo ingresado no tiene un formato válido.">
                     <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" />
                 </p:inputText>
                 <p:message for="correo" display="text" />
@@ -215,7 +215,8 @@
                             value="#{registroBean.telefono}" 
                             required="true"
                             requiredMessage="El teléfono es obligatorio"
-                            placeholder="Ejemplo: 987654321">
+                            placeholder="Ejemplo: 987654321"
+                            validatorMessage="Su telefono no cumple con el formato">
                     <f:validateRegex pattern="^[0-9]{9,15}$" />
                 </p:inputText>
                 <p:message for="telefono" display="text" />
@@ -230,7 +231,8 @@
                             value="#{registroBean.direccion}" 
                             required="true"
                             requiredMessage="La dirección es obligatoria"
-                            placeholder="Ingrese su dirección completa">
+                            placeholder="Ingrese su dirección completa"
+                            validatorMessage="Su direccion no cumple con el formato">
                     <f:validateLength minimum="5" maximum="200" />
                 </p:inputText>
                 <p:message for="direccion" display="text" />
@@ -248,7 +250,8 @@
                                requiredMessage="La contraseña es obligatoria"
                                placeholder="Mínimo 6 caracteres"
                                feedback="false"
-                               toggleMask="true">
+                               toggleMask="true"
+                               validatorMessage="Su contraseña no cumple con el formato">
                         <f:validateLength minimum="6" maximum="50" />
                     </p:password>
                     <p:message for="contrasena" display="text" />
@@ -272,7 +275,7 @@
             <!-- Botón Registrarse -->
             <p:commandButton value="Registrarse" 
                             action="#{registroBean.registrar}"
-                            update="messages"
+                            update="@form"
                             icon="pi pi-user-plus"
                             styleClass="ui-button-lg" />
             
