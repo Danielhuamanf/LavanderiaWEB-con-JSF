@@ -92,9 +92,7 @@ public class ClienteBean implements Serializable {
     }
     
     public void guardarCliente() {
-        if (!validarFormulario()) {
-            return;
-        }
+        
         
         try {
             if (modoEdicion) {
@@ -173,56 +171,6 @@ public class ClienteBean implements Serializable {
         }
     }
     
-    
-    // Métodos de validación
-    private boolean validarFormulario() {
-        boolean esValido = true;
-        
-        // Validar nombre
-        if (clienteSeleccionado.getNombre() == null || clienteSeleccionado.getNombre().trim().isEmpty()) {
-            mostrarMensaje("El nombre es requerido", FacesMessage.SEVERITY_ERROR);
-            esValido = false;
-        }
-        
-        // Validar correo
-        if (clienteSeleccionado.getCorreo() == null || clienteSeleccionado.getCorreo().trim().isEmpty()) {
-            mostrarMensaje("El correo electrónico es requerido", FacesMessage.SEVERITY_ERROR);
-            esValido = false;
-        } else if (!EMAIL_PATTERN.matcher(clienteSeleccionado.getCorreo()).matches()) {
-            mostrarMensaje("El formato del correo electrónico no es válido", FacesMessage.SEVERITY_ERROR);
-            esValido = false;
-        }
-        
-        // Validar teléfono
-        if (clienteSeleccionado.getTelefono() == null || clienteSeleccionado.getTelefono().trim().isEmpty()) {
-            mostrarMensaje("El teléfono es requerido", FacesMessage.SEVERITY_ERROR);
-            esValido = false;
-        }
-        
-        // Validar dirección
-        if (clienteSeleccionado.getDireccion() == null || clienteSeleccionado.getDireccion().trim().isEmpty()) {
-            mostrarMensaje("La dirección es requerida", FacesMessage.SEVERITY_ERROR);
-            esValido = false;
-        }
-        
-        // Validar contraseña solo en modo creación
-        if (!modoEdicion) {
-            if (clienteSeleccionado.getContrasena() == null || clienteSeleccionado.getContrasena().trim().isEmpty()) {
-                mostrarMensaje("La contraseña es requerida", FacesMessage.SEVERITY_ERROR);
-                esValido = false;
-            } else if (clienteSeleccionado.getContrasena().length() < 6) {
-                mostrarMensaje("La contraseña debe tener al menos 6 caracteres", FacesMessage.SEVERITY_ERROR);
-                esValido = false;
-            } else if (!clienteSeleccionado.getContrasena().equals(confirmarContrasena)) {
-                mostrarMensaje("Las contraseñas no coinciden", FacesMessage.SEVERITY_ERROR);
-                esValido = false;
-            }
-        }
-        
-        return esValido;
-    }
-    
-    // Métodos auxiliares
     public void cerrarDialogo() {
         this.dialogoVisible = false;
         this.clienteSeleccionado = new UsuarioDTO();

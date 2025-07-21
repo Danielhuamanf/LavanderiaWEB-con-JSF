@@ -17,8 +17,6 @@ public interface UsuarioDAO {
     UsuarioDTO buscarPorId(int id);
 
     boolean existeCorreo(String correo);
-
-    List<UsuarioDTO> obtenerTodosUsuarios();
     
     List<UsuarioDTO> obtenerUsuariosPorRol(String rol);
     
@@ -26,5 +24,4 @@ public interface UsuarioDAO {
     
     boolean eliminarUsuario(int id);
     
-    boolean cambiarContrasena(String correo, String nuevaContrasena);
 }

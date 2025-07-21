@@ -43,8 +43,7 @@ public class LoginBean implements Serializable {
             FacesContext.getCurrentInstance()
                     .getExternalContext().getSessionMap()
                     .put("usuario", usuarioLogueado);
-            NavigationController.mostrarMensajeExito("¡Bienvenido " + usuario.getNombre() + "!");
-
+           
             limpiarCampos();
 
             return NavigationController.redirigirSegunRol(usuario);
@@ -60,36 +59,13 @@ public class LoginBean implements Serializable {
         try {
             this.usuarioLogueado = null;
             limpiarCampos();
-            NavigationController.mostrarMensajeExito("Sesión cerrada exitosamente");
+           
             return NavigationController.logout();
         } catch (Exception e) {
             mostrarMensajeError("Error al cerrar sesión");
             e.printStackTrace();
             return null;
         }
-    }
-
-    public boolean isLogueado() {
-        return usuarioLogueado != null || NavigationController.hayUsuarioLogueado();
-    }
-
-    public UsuarioDTO getUsuarioLogueado() {
-        if (usuarioLogueado == null) {
-            usuarioLogueado = NavigationController.obtenerUsuarioDeSesion();
-        }
-        return usuarioLogueado;
-    }
-
-    public boolean isAdministrador() {
-        return NavigationController.esAdministrador();
-    }
-
-    public boolean isCliente() {
-        return NavigationController.esCliente();
-    }
-
-    public String getInfoSesion() {
-        return NavigationController.getInfoSesion();
     }
 
     public String irARegistro() {

@@ -47,63 +47,6 @@ public class PedidoDAOImpl implements PedidoDAO {
     }
     
     @Override
-    public List<PedidoDTO> obtenerPedidosPorUsuario(int idUsuario) {
-        List<PedidoDTO> pedidos = new ArrayList<>();
-        String sql = "SELECT p.*, s.nombre_servicio, u.nombres as nombre_usuario " +
-                    "FROM pedido p " +
-                    "JOIN servicio s ON p.id_servicio = s.id_servicio " +
-                    "JOIN usuarios u ON p.id_usuario = u.id_usuario " +
-                    "WHERE p.id_usuario = ? " +
-                    "ORDER BY p.fecha_pedido DESC";
-        
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, idUsuario);
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    PedidoDTO pedido = mapearResultSetAPedido(rs);
-                    pedidos.add(pedido);
-                }
-            }
-            
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("Error al obtener pedidos por usuario: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return pedidos;
-    }
-    
-    @Override
-    public PedidoDTO obtenerPedidoPorId(int idPedido) {
-        String sql = "SELECT p.*, s.nombre_servicio, u.nombre as nombre_usuario " +
-                    "FROM pedido p " +
-                    "JOIN servicio s ON p.id_servicio = s.id_servicio " +
-                    "JOIN usuarios u ON p.id_usuario = u.id_usuario " +
-                    "WHERE p.id_pedido = ?";
-        
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setInt(1, idPedido);
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapearResultSetAPedido(rs);
-                }
-            }
-            
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("Error al obtener pedido por ID: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return null;
-    }
-    
-    @Override
     public List<PedidoDTO> obtenerTodosPedidos() {
         List<PedidoDTO> pedidos = new ArrayList<>();
         String sql = "SELECT p.*, s.nombre_servicio, u.nombre as nombre_usuario " +
@@ -147,36 +90,6 @@ public class PedidoDAOImpl implements PedidoDAO {
         }
         
         return false;
-    }
-    
-    @Override
-    public List<PedidoDTO> obtenerPedidosPorEstado(String estado) {
-        List<PedidoDTO> pedidos = new ArrayList<>();
-        String sql = "SELECT p.*, s.nombre_servicio, u.nombre as nombre_usuario " +
-                    "FROM pedido p " +
-                    "JOIN servicio s ON p.id_servicio = s.id_servicio " +
-                    "JOIN usuarios u ON p.id_usuario = u.id_usuario " +
-                    "WHERE p.estado = ? " +
-                    "ORDER BY p.fecha_pedido DESC";
-        
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
-            stmt.setString(1, estado);
-            
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    PedidoDTO pedido = mapearResultSetAPedido(rs);
-                    pedidos.add(pedido);
-                }
-            }
-            
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("Error al obtener pedidos por estado: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return pedidos;
     }
     
     @Override

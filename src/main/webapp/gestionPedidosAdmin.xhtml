@@ -485,7 +485,8 @@
                                          styleClass="btn btn-primary me-2"
                                          icon="pi pi-check"
                                          action="#{gestionPedidosAdminBean.crearPedido}"
-                                         update="formPrincipal"/>
+                                         update="formPrincipal"
+                                         oncomplete="PF('dialogNuevoPedido').hide()"/>
                         <p:commandButton value="Cancelar" 
                                          styleClass="btn btn-secondary"
                                          action="#{gestionPedidosAdminBean.cerrarModalNuevo}"

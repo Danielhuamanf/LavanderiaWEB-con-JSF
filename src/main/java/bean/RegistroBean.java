@@ -64,7 +64,7 @@ public class RegistroBean implements Serializable {
             
             // Registrar usuario
             if (usuarioDAO.registrarUsuario(nuevoUsuario)) {
-                NavigationController.mostrarMensajeExito("¡Registro exitoso! Ahora puedes iniciar sesión.");
+                
                 limpiarCampos();
                 return NavigationController.LOGIN_PAGE + "?faces-redirect=true";
             } else {

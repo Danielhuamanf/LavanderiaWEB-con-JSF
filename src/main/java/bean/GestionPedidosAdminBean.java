@@ -119,8 +119,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
 }
 
 
-    
-    // Variables para nuevo pedido
     private int idClienteSeleccionado;
     private int idServicioSeleccionado;
     
@@ -136,7 +134,7 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
     private void cargarDatos() {
         pedidos = pedidoDAO.obtenerTodosPedidos();
         pedidosFiltrados = new ArrayList<>(pedidos);
-        usuarios = usuarioDAO.obtenerTodosUsuarios();
+        usuarios = usuarioDAO.obtenerUsuariosPorRol("cliente");
         servicios = servicioDAO.obtenerTodosServicios();
     }
     
@@ -412,9 +410,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         return clon;
     }
     
-    /**
-     * Obtener correo del cliente
-     */
     private String obtenerCorreoCliente(int idUsuario) {
         UsuarioDTO usuario = usuarioDAO.buscarPorId(idUsuario);
         return usuario != null ? usuario.getCorreo() : "";
