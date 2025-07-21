@@ -8,6 +8,7 @@ bean\NuevoPedidoBean.class
 bean\GestionPedidosAdminBean.class
 dao\ServicioDAO.class
 com\mycompany\nuevalavanderia\JakartaRestConfiguration.class
+bean\AdminBean.class
 bean\FormularioBean.class
 com\mycompany\nuevalavanderia\resources\JakartaEE10Resource.class
 dao\PedidoDAO.class

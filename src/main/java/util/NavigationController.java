@@ -17,10 +17,10 @@ public class NavigationController {
     public static final String LOGIN_PAGE = "/login.xhtml";
     public static final String REGISTRO_PAGE = "/registro.xhtml";
     public static final String CLIENTE_INICIO = "/inicio.xhtml";
-    public static final String ADMIN_DASHBOARD = "/dashboard.xhtml";
+    public static final String ADMIN_DASHBOARD = "/gestionPedidosAdmin.xhtml";
     public static final String ERROR_PAGE = "/error.xhtml";
-    
-
+    public static final String CLIENTE_GESTION = "/gestionClientes.xhtml";
+    public static final String SERVICIO_GESTION = "/gestionServicios.xhtml";    
     public static final String USUARIO_SESSION = "usuarioLogueado";
     public static final String ROL_SESSION = "rolUsuario";
     
