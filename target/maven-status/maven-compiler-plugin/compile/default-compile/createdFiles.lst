@@ -18,5 +18,6 @@ bean\RegistroBean.class
 dao\UsuarioDAO.class
 dao\impl\PedidoDAOImpl.class
 bean\MisPedidosBean.class
+bean\ClienteBean.class
 dao\impl\UsuarioDAOImpl.class
 dto\ServicioDTO.class

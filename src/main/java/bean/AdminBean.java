@@ -28,6 +28,9 @@ public class AdminBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return LOGIN_PAGE+"?faces-redirect=true";
     }
+    public String irGestionPedidos() {
+        return PEDIDO_GESTION + "?faces-redirect=true"; // Define SERVICIO_GESTION en NavigationController
+    }
 
     
 }

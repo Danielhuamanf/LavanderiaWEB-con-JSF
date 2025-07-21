@@ -1,11 +1,398 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
     <h:head>
-        <title>Facelet Title</title>
+        <title>Gestión de Clientes</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+        <style>
+            .ui-panel-titlebar {
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .btn-toolbar {
+                margin-bottom: 10px;
+            }
+
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .form-grid-full {
+                grid-column: 1 / -1;
+            }
+
+            .required-field label {
+                font-weight: bold;
+            }
+
+            .required-field label::after {
+                content: " *";
+                color: red;
+            }
+
+            .table-toolbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .toolbar-left {
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            .toolbar-right {
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            .navbar-custom {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .navbar-custom .navbar-brand {
+                color: white !important;
+                font-weight: bold;
+            }
+
+            .navbar-custom .nav-link {
+                color: white !important;
+            }
+
+          
+        </style>
     </h:head>
+
     <h:body>
-        Hello from Facelets
+         <nav class="navbar navbar-expand-lg navbar-custom"> 
+            <div class="container">
+                <h:form styleClass="d-flex w-100 justify-content-between align-items-center">
+                    <h:commandLink action="#{adminBean.irDashboard}" styleClass="navbar-brand text-white">
+                        <i class="fas fa-tshirt me-2"></i> Lavandería Admin
+                    </h:commandLink>
+
+                    <div class="navbar-nav ms-auto align-items-center">
+                        <span class="nav-link text-white">
+                            <i class="fas fa-user me-1"></i> #{inicioBean.usuarioLogueado.nombre}
+                        </span>
+
+                        <p:commandButton 
+                            value="Gestión  Pedidos"
+                            action="#{adminBean.irGestionPedidos}"
+                            icon="pi pi-users"
+                            styleClass="btn me-2"
+                            style="background-color: #764ba2; color: white; border: none;"
+                            iconPos="left"/>
+
+                        <p:commandButton 
+                            value="Gestión Servicios"
+                            action="#{adminBean.irGestionServicios}"
+                            icon="pi pi-cog"
+                            styleClass="btn me-2"
+                            style="background-color: #764ba2; color: white; border: none;"
+                            iconPos="left"/>
+
+                        <p:commandButton  
+                            value="Cerrar Sesión"
+                            action="#{adminBean.cerrarSesion}"
+                            icon="pi pi-sign-out"
+                            styleClass="btn me-2"
+                            style="background-color: #764ba2; color: white; border: none;"
+                            iconPos="left"/>
+                    </div>
+                </h:form>
+            </div>
+        </nav>
+        <f:view>
+           
+            <h:form id="form">
+                <!-- Mensajes globales -->
+            <p:growl id="growl" showDetail="true" life="4000" />
+            
+                <p:panel header="Gestión de Clientes" styleClass="ui-panel-titlebar">
+
+                    <!-- Barra de herramientas -->
+                    <div class="table-toolbar">
+                        <div class="toolbar-left">
+                            <p:commandButton value="Nuevo Cliente" 
+                                             icon="pi pi-plus"
+                                             styleClass="ui-button-success"
+                                             action="#{clienteBean.prepararNuevoCliente}"
+                                             update=":form:dlgClientePanel"
+                                             process="@this"
+                                             oncomplete="PF('dlgCliente').show();" />
+
+                           
+                        </div>
+
+                        <div class="toolbar-right">
+                            <p:outputLabel value="Total: #{clienteBean.clientes.size()} clientes" 
+                                           style="font-weight: bold;" />
+                        </div>
+                    </div>
+
+                    <!-- Tabla de clientes -->
+                    <p:dataTable id="tablaClientes" 
+                                 var="cliente" 
+                                 value="#{clienteBean.clientes}"
+                                 filteredValue="#{clienteBean.clientesFiltrados}"
+                                 selection="#{clienteBean.clientesSeleccionados}"
+                                 selectionMode="multiple"
+                                 rowKey="#{cliente.idUsuario}"
+                                 paginator="true" 
+                                 rows="10"
+                                 rowsPerPageTemplate="10,25,50"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="Mostrando {startRecord} - {endRecord} de {totalRecords} registros"
+
+                                 emptyMessage="No se encontraron clientes"
+                                 sortMode="multiple"
+                                 resizableColumns="true"
+                                 reflow="true"
+                                 styleClass="ui-table-responsive">
+
+                        <!-- Encabezado con filtro global -->
+                        <f:facet name="header">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                                <span style="font-weight: bold; font-size: 1.1em;">Lista de Clientes</span>
+                                <p:inputText id="globalFilter" 
+                                             onkeyup="PF('tablaClientesWidget').filter()" 
+                                             placeholder="Buscar en toda la tabla..."
+                                             style="width: 200px;" />
+                            </div>
+                        </f:facet>
+
+                        <!-- Columna de selección -->
+                        <p:column  
+                            style="width:40px;text-align:center" 
+                            exportable="false" />
+
+                        <!-- Columna ID -->
+                        <p:column headerText="ID" 
+                                  sortBy="#{cliente.idUsuario}" 
+                                  filterBy="#{cliente.idUsuario}"
+                                  style="width:60px;text-align:center;">
+                            <h:outputText value="#{cliente.idUsuario}" />
+                        </p:column>
+
+                        <!-- Columna Nombre -->
+                        <p:column headerText="Nombre Completo" 
+                                  sortBy="#{cliente.nombre}" 
+                                  filterBy="#{cliente.nombre}"
+                                  filterMatchMode="contains">
+                            <h:outputText value="#{cliente.nombre}" />
+                        </p:column>
+
+                        <!-- Columna Correo -->
+                        <p:column headerText="Correo Electrónico" 
+                                  sortBy="#{cliente.correo}" 
+                                  filterBy="#{cliente.correo}"
+                                  filterMatchMode="contains">
+                            <h:outputText value="#{cliente.correo}" />
+                        </p:column>
+
+                        <!-- Columna Teléfono -->
+                        <p:column headerText="Teléfono" 
+                                  sortBy="#{cliente.telefono}" 
+                                  filterBy="#{cliente.telefono}"
+                                  filterMatchMode="contains"
+                                  style="width:120px;">
+                            <h:outputText value="#{cliente.telefono}" />
+                        </p:column>
+
+                        <!-- Columna Dirección -->
+                        <p:column headerText="Dirección" 
+                                  sortBy="#{cliente.direccion}" 
+                                  filterBy="#{cliente.direccion}"
+                                  filterMatchMode="contains">
+                            <h:outputText value="#{cliente.direccion}" />
+                        </p:column>
+
+                        <!-- Columna Acciones -->
+                        <p:column headerText="Acciones" 
+                                  exportable="false" 
+                                  style="width:120px;text-align:center;">
+                            <p:commandButton icon="pi pi-pencil" 
+                                             styleClass="ui-button-warning"
+                                             title="Editar Cliente"
+                                             action="#{clienteBean.prepararEdicionCliente}"
+                                             update=":form:dlgClientePanel"
+                                             process="@this"
+                                             oncomplete="PF('dlgCliente').show();">
+                                <f:setPropertyActionListener target="#{clienteBean.clienteSeleccionado}" 
+                                                             value="#{cliente}" />
+                            </p:commandButton>
+
+
+                            <p:commandButton icon="pi pi-trash" 
+                                             styleClass="ui-button-danger"
+                                             title="Eliminar Cliente"
+                                             style="margin-left: 5px;"
+                                             onclick="PF('dlgConfirmarEliminacionIndividual').show();"
+                                             process="@this">
+                                <f:setPropertyActionListener target="#{clienteBean.clienteSeleccionado}" 
+                                                             value="#{cliente}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:panel>
+
+                <!-- Diálogo para crear/editar cliente -->
+                <p:dialog id="dlgClientePanel" 
+                          header="#{clienteBean.modoEdicion ? 'Editar Cliente' : 'Nuevo Cliente'}" 
+                          widgetVar="dlgCliente" 
+                          modal="true" 
+                          width="600" 
+                          height="500"
+                          responsive="true"
+                          closeOnEscape="true"
+                          resizable="false">
+
+                    <p:panel style="border: none;">
+                        <div class="form-grid">
+
+                            <!-- Nombre -->
+                            <div class="required-field">
+                                <p:outputLabel for="nombre" value="Nombre Completo:" />
+                                <p:inputText id="nombre" 
+                                             value="#{clienteBean.clienteSeleccionado.nombre}" 
+                                             required="true" 
+                                             requiredMessage="El nombre es requerido"
+                                             maxlength="100"
+                                             style="width: 100%;" />
+                                <p:message for="nombre" />
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="required-field">
+                                <p:outputLabel for="telefono" value="Teléfono:" />
+                                <p:inputText id="telefono" 
+                                             value="#{clienteBean.clienteSeleccionado.telefono}" 
+                                             required="true" 
+                                             requiredMessage="El teléfono es requerido"
+                                             maxlength="20"
+                                             style="width: 100%;" />
+                                <p:message for="telefono" />
+                            </div>
+
+                            <!-- Correo -->
+                            <div class="required-field form-grid-full">
+                                <p:outputLabel for="correo" value="Correo Electrónico:" />
+                                <p:inputText id="correo" 
+                                             value="#{clienteBean.clienteSeleccionado.correo}" 
+                                             required="true" 
+                                             requiredMessage="El correo electrónico es requerido"
+                                             disabled="#{clienteBean.modoEdicion}"
+                                             maxlength="100"
+                                             style="width: 100%;" />
+                                <p:message for="correo" />
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="required-field form-grid-full">
+                                <p:outputLabel for="direccion" value="Dirección:" />
+                                <p:inputTextarea id="direccion" 
+                                                 value="#{clienteBean.clienteSeleccionado.direccion}" 
+                                                 required="true" 
+                                                 requiredMessage="La dirección es requerida"
+                                                 rows="3"
+                                                 maxlength="200"
+                                                 style="width: 100%;" />
+                                <p:message for="direccion" />
+                            </div>
+
+                            <!-- Contraseña (solo en modo creación) -->
+                            <div class="required-field" style="#{clienteBean.modoEdicion ? 'display: none;' : ''}">
+                                <p:outputLabel for="contrasena" value="Contraseña:" />
+                                <p:password id="contrasena" 
+                                            value="#{clienteBean.clienteSeleccionado.contrasena}" 
+                                            required="#{!clienteBean.modoEdicion}" 
+                                            requiredMessage="La contraseña es requerida"
+                                            feedback="true"
+
+                                            maxlength="100"
+                                            style="width: 100%;" />
+                                <p:message for="contrasena" />
+                            </div>
+
+                            <!-- Confirmar Contraseña (solo en modo creación) -->
+                            <div class="required-field" style="#{clienteBean.modoEdicion ? 'display: none;' : ''}">
+                                <p:outputLabel for="confirmarContrasena" value="Confirmar Contraseña:" />
+                                <p:password id="confirmarContrasena" 
+                                            value="#{clienteBean.confirmarContrasena}" 
+                                            required="#{!clienteBean.modoEdicion}" 
+                                            requiredMessage="Debe confirmar la contraseña"
+                                            maxlength="100"
+                                            style="width: 100%;" />
+                                <p:message for="confirmarContrasena" />
+                            </div>
+
+                        </div>
+                    </p:panel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" 
+                                         icon="pi pi-check" 
+                                         styleClass="ui-button-success"
+                                         action="#{clienteBean.guardarCliente}"
+                                         update=":form:tablaClientes, :form:growl, :form:messages"
+                                         oncomplete="if (!args.validationFailed) { PF('dlgCliente').hide(); }"
+                                         process="dlgClientePanel" />
+
+                        <p:commandButton value="Cancelar" 
+                                         icon="pi pi-times" 
+                                         styleClass="ui-button-secondary"
+                                         onclick="PF('dlgCliente').hide();"
+                                         action="#{clienteBean.cerrarDialogo}"
+                                         update="dlgClientePanel"
+                                         process="@this" />
+                    </f:facet>
+
+                </p:dialog>
+
+                <!-- Diálogo de confirmación para eliminación individual -->
+                <p:confirmDialog id="dlgConfirmarEliminacionIndividual"
+                                 header="Confirmar Eliminación" 
+                                 message="¿Está seguro de que desea eliminar el cliente #{clienteBean.clienteSeleccionado.nombre}?"
+                                 widgetVar="dlgConfirmarEliminacionIndividual"
+                                 severity="alert">
+
+                    <p:commandButton value="Sí, eliminar" 
+                                     icon="pi pi-check" 
+                                     styleClass="ui-button-danger"
+                                     action="#{clienteBean.eliminarCliente}"
+                                     update=":form:tablaClientes, :form:growl"
+                                     oncomplete="PF('dlgConfirmarEliminacionIndividual').hide();"
+                                     process="@this" />
+
+                    <p:commandButton value="Cancelar" 
+                                     icon="pi pi-times" 
+                                     styleClass="ui-button-secondary"
+                                     onclick="PF('dlgConfirmarEliminacionIndividual').hide();"
+                                     process="@this" />
+                </p:confirmDialog>
+
+
+            </h:form>
+        </f:view>
+
+    
     </h:body>
 </html>

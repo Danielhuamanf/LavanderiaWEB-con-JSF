@@ -21,6 +21,7 @@ public class NavigationController {
     public static final String ERROR_PAGE = "/error.xhtml";
     public static final String CLIENTE_GESTION = "/gestionClientes.xhtml";
     public static final String SERVICIO_GESTION = "/gestionServicios.xhtml";    
+    public static final String PEDIDO_GESTION = "/gestionPedidosAdmin.xhtml"; 
     public static final String USUARIO_SESSION = "usuarioLogueado";
     public static final String ROL_SESSION = "rolUsuario";
     
