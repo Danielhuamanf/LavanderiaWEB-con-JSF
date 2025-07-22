@@ -59,20 +59,14 @@ public class NuevoPedidoBean implements Serializable {
         this.total = BigDecimal.ZERO;
         this.mostrarTotal = false;
 
-        // Cargar servicios disponibles
         cargarServicios();
 
-        // Establecer fechas por defecto
         this.fechaRecojo = LocalDate.now().plusDays(1);
         this.fechaEntrega = LocalDate.now().plusDays(3);
         this.horaRecojo = LocalTime.of(9, 0);
         this.horaEntrega = LocalTime.of(17, 0);
     }
     
-
-    /**
-     * Carga los servicios activos desde la base de datos
-     */
     public void cargarServicios() {
         try {
             this.serviciosDisponibles = servicioDAO.obtenerServiciosActivos();
@@ -83,9 +77,6 @@ public class NuevoPedidoBean implements Serializable {
         }
     }
 
-    /**
-     * Se ejecuta cuando se selecciona un servicio del ComboBox
-     */
     public void onServicioSeleccionado() {
         if (servicioSeleccionado != null) {
             calcularTotal();
@@ -95,18 +86,13 @@ public class NuevoPedidoBean implements Serializable {
         }
     }
 
-    /**
-     * Se ejecuta cuando cambia la cantidad
-     */
     public void onCantidadCambiada() {
         if (servicioSeleccionado != null && cantidad > 0) {
             calcularTotal();
         }
     }
 
-    /**
-     * Calcula el total del pedido
-     */
+
     public void calcularTotal() {
         if (servicioSeleccionado != null && cantidad > 0) {
             total = servicioSeleccionado.getPrecio().multiply(BigDecimal.valueOf(cantidad));
@@ -117,42 +103,32 @@ public class NuevoPedidoBean implements Serializable {
         }
     }
 
-    /**
-     * Valida los datos del formulario
-     */
     public boolean validarDatos() {
         FacesContext context = FacesContext.getCurrentInstance();
         boolean valido = true;
 
-        // Validar servicio seleccionado
         if (servicioSeleccionado == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "Debe seleccionar un servicio"));
             valido = false;
         }
-
-        // Validar cantidad
         if (cantidad <= 0) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "La cantidad debe ser mayor a 0"));
             valido = false;
         }
 
-        // Validar método de entrega
         if (metodoEntrega == null || metodoEntrega.trim().isEmpty()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "Debe seleccionar un método de entrega"));
             valido = false;
         }
-
-        // Validar método de pago
         if (metodoPago == null || metodoPago.trim().isEmpty()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "Debe seleccionar un método de pago"));
             valido = false;
         }
 
-        // Validar fechas
         if (fechaRecojo == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "Debe seleccionar una fecha de recojo"));
@@ -173,7 +149,6 @@ public class NuevoPedidoBean implements Serializable {
             valido = false;
         }
 
-        // Validar horas
         if (horaRecojo == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error", "Debe seleccionar una hora de recojo"));
@@ -189,16 +164,13 @@ public class NuevoPedidoBean implements Serializable {
         return valido;
     }
 
-    /**
-     * Registra el pedido en la base de datos
-     */
+ 
     public String registrarPedido() {
         try {
             if (!validarDatos()) {
                 return null;
             }
 
-            // Obtener usuario de la sesión
             UsuarioDTO usuario = (UsuarioDTO) FacesContext.getCurrentInstance()
                     .getExternalContext().getSessionMap().get("usuario");
 
@@ -209,7 +181,7 @@ public class NuevoPedidoBean implements Serializable {
                 return "login?faces-redirect=true";
             }
 
-            // Configurar el pedido
+
             pedido.setIdUsuario(usuario.getIdUsuario());
             pedido.setIdServicio(servicioSeleccionado.getIdServicio());
             pedido.setCantidad(cantidad);
@@ -224,7 +196,6 @@ public class NuevoPedidoBean implements Serializable {
             pedido.setEstado("Pendiente");
             pedido.setFechaPedido(LocalDate.now());
 
-            // Guardar en base de datos
             boolean exito = pedidoDAO.crearPedido(pedido);
 
             if (exito) {
@@ -232,10 +203,8 @@ public class NuevoPedidoBean implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_INFO,
                                 "Éxito", "Pedido registrado correctamente"));
 
-                // Limpiar formulario
                 limpiarFormulario();
 
-                // Redirigir a la página de confirmación o dashboard
                 return "inicio?faces-redirect=true";
             } else {
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -252,9 +221,6 @@ public class NuevoPedidoBean implements Serializable {
         return null;
     }
 
-    /**
-     * Limpia el formulario después de registrar el pedido
-     */
     public void limpiarFormulario() {
         this.pedido = new PedidoDTO();
         this.servicioSeleccionado = null;

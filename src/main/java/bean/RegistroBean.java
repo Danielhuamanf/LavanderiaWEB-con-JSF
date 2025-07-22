@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class RegistroBean implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    // Campos del formulario
+   
     private String nombre;
     private String correo;
     private String telefono;
@@ -31,11 +31,9 @@ public class RegistroBean implements Serializable {
     private String contrasena;
     private String confirmarContrasena;
     
-    // DAO para acceso a datos
+
     private UsuarioDAO usuarioDAO;
     
- 
-    // Constructor
     public RegistroBean() {
         this.usuarioDAO = new UsuarioDAOImpl();
     }

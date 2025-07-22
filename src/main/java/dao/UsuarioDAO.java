@@ -9,8 +9,6 @@ import java.util.List;
 public interface UsuarioDAO {
     
     boolean registrarUsuario(UsuarioDTO usuario);
-    
-    UsuarioDTO autenticarUsuario(String correo, String contrasena);
 
     UsuarioDTO buscarPorCorreo(String correo);
  

@@ -67,9 +67,7 @@ public void abrirModalCambiarEstado(PedidoDTO pedido) {
 public void cambiarEstadoSeleccionado() {
     if (pedidoSeleccionado != null && estadoSeleccionado != null && !estadoSeleccionado.isEmpty()) {
 
-        if (!validarCambioEstado(pedidoSeleccionado.getEstado(), estadoSeleccionado)) {
-            return;
-        }
+
         if (pedidoDAO.actualizarEstadoPedido(pedidoSeleccionado.getIdPedido(), estadoSeleccionado)) {
             pedidoSeleccionado.setEstado(estadoSeleccionado);
             cargarDatos();
@@ -135,16 +133,14 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         pedidos = pedidoDAO.obtenerTodosPedidos();
         pedidosFiltrados = new ArrayList<>(pedidos);
         usuarios = usuarioDAO.obtenerUsuariosPorRol("cliente");
-        servicios = servicioDAO.obtenerTodosServicios();
+        servicios = servicioDAO.obtenerServiciosActivos();
     }
     
-    /**
-     * Aplicar filtros a la lista de pedidos
-     */
+
     public void aplicarFiltros() {
         pedidosFiltrados = pedidos.stream()
             .filter(pedido -> {
-                // Filtro por cliente (nombre o correo)
+                
                 if (!filtroCliente.isEmpty()) {
                     String clienteNombre = pedido.getNombreUsuario().toLowerCase();
                     String clienteCorreo = obtenerCorreoCliente(pedido.getIdUsuario()).toLowerCase();
@@ -155,17 +151,17 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
                     }
                 }
                 
-                // Filtro por estado
+               
                 if (!filtroEstado.isEmpty() && !pedido.getEstado().equals(filtroEstado)) {
                     return false;
                 }
                 
-                // Filtro por fecha desde
+    
                 if (fechaDesde != null && pedido.getFechaPedido().isBefore(fechaDesde)) {
                     return false;
                 }
                 
-                // Filtro por fecha hasta
+           
                 if (fechaHasta != null && pedido.getFechaPedido().isAfter(fechaHasta)) {
                     return false;
                 }
@@ -175,9 +171,7 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
             .collect(Collectors.toList());
     }
     
-    /**
-     * Limpiar todos los filtros
-     */
+
     public void limpiarFiltros() {
         filtroCliente = "";
         filtroEstado = "";
@@ -186,42 +180,29 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         pedidosFiltrados = new ArrayList<>(pedidos);
     }
     
-    /**
-     * Mostrar detalles del pedido en modal
-     */
+
     public void verDetalles(PedidoDTO pedido) {
         pedidoSeleccionado = pedido;
         clienteSeleccionado = usuarioDAO.buscarPorId(pedido.getIdUsuario());
        
     }
     
-    /**
-     * Abrir modal para editar pedido
-     */
+
     public void abrirModalEditar(PedidoDTO pedido) {
-        if (!puedeEditarPedido(pedido)) {
-            mostrarMensaje(FacesMessage.SEVERITY_WARN, 
-                "Advertencia", "No se puede editar un pedido entregado o cancelado.");
-            return;
-        }
-        
+
         pedidoEditar = clonarPedido(pedido);
         idServicioSeleccionado = pedidoEditar.getIdServicio();
         
     }
     
-    /**
-     * Guardar cambios del pedido editado
-     */
     public void guardarEdicion() {
         if (!validarPedido(pedidoEditar)) {
             return;
         }
-        
-        // Actualizar el servicio seleccionado
+
         pedidoEditar.setIdServicio(idServicioSeleccionado);
         
-        // Recalcular total
+
         calcularTotal(pedidoEditar);
         
         if (pedidoDAO.actualizarPedido(pedidoEditar)) {
@@ -236,19 +217,11 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         }
     }
     
-
-    
-    /**
-     * Confirmar eliminación de pedido
-     */
     public void confirmarEliminar(PedidoDTO pedido) {
         pedidoSeleccionado = pedido;
         
     }
     
-    /**
-     * Eliminar pedido
-     */
     public void eliminarPedido() {
         if (pedidoDAO.eliminarPedido(pedidoSeleccionado.getIdPedido())) {
             mostrarMensaje(FacesMessage.SEVERITY_INFO,
@@ -262,19 +235,13 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         
     }
     
-    /**
-     * Abrir modal para crear nuevo pedido
-     */
     public void abrirModalNuevo() {
         nuevoPedido = new PedidoDTO();
         idClienteSeleccionado = 0;
         idServicioSeleccionado = 0;
         
     }
-    
-    /**
-     * Crear nuevo pedido
-     */
+
     public void crearPedido() {
         if (idClienteSeleccionado == 0) {
             mostrarMensaje(FacesMessage.SEVERITY_ERROR, 
@@ -308,9 +275,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         }
     }
     
-    /**
-     * Validar datos del pedido
-     */
     private boolean validarPedido(PedidoDTO pedido) {
         if (pedido.getCantidad() <= 0) {
             mostrarMensaje(FacesMessage.SEVERITY_ERROR, 
@@ -350,29 +314,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         
         return true;
     }
-    
-    /**
-     * Validar cambio de estado
-     */
-    private boolean validarCambioEstado(String estadoActual, String nuevoEstado) {
-        // Un pedido no puede pasar a "Entregado" sin haber pasado antes por "Listo para entrega"
-        if (nuevoEstado.equals("Entregado") && !estadoActual.equals("Listo para entrega")) {
-            mostrarMensaje(FacesMessage.SEVERITY_WARN, 
-                "Advertencia", "El pedido debe estar 'Listo para entrega' antes de marcarlo como 'Entregado'.");
-            return false;
-        }
-        
-       
-        
-        return true;
-    }
-    
-
-    private boolean puedeEditarPedido(PedidoDTO pedido) {
-        return !pedido.getEstado().equals("Entregado") && !pedido.getEstado().equals("Cancelado");
-    }
-    
-    
     private void calcularTotal(PedidoDTO pedido) {
         ServicioDTO servicio = servicios.stream()
             .filter(s -> s.getIdServicio() == pedido.getIdServicio())
@@ -385,9 +326,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
         }
     }
     
-    /**
-     * Clonar pedido para edición
-     */
     private PedidoDTO clonarPedido(PedidoDTO original) {
         PedidoDTO clon = new PedidoDTO();
         clon.setIdPedido(original.getIdPedido());
@@ -421,9 +359,6 @@ public List<String> getEstadosDisponiblesParaSeleccionado() {
             new FacesMessage(severity, summary, detail));
     }
     
-    
-
-   
     
     // Getters y Setters
     public List<PedidoDTO> getPedidos() {

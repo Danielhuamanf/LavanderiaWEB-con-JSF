@@ -20,10 +20,8 @@ public class ClienteBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
     private static final String ROL_CLIENTE = "cliente";
-    private static final Pattern EMAIL_PATTERN = 
-        Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$");
-    
-    // Servicios
+  
+  
     private UsuarioDAO usuarioDAO;
     
     // Propiedades para la tabla
@@ -52,7 +50,7 @@ public class ClienteBean implements Serializable {
         cargarClientes();
     }
     
-    // Métodos de carga de datos
+    
     public void cargarClientes() {
         try {
             this.clientes = usuarioDAO.obtenerUsuariosPorRol(ROL_CLIENTE);
@@ -64,7 +62,7 @@ public class ClienteBean implements Serializable {
         }
     }
     
-    // Métodos para el CRUD
+
     public void prepararNuevoCliente() {
         this.clienteSeleccionado = new UsuarioDTO();
         this.clienteSeleccionado.setRol(ROL_CLIENTE);
@@ -75,7 +73,6 @@ public class ClienteBean implements Serializable {
     
     public void prepararEdicionCliente() {
         if (this.clienteSeleccionado != null) {
-            // Crear una copia para evitar modificar el objeto original hasta guardar
             UsuarioDTO cliente = this.clienteSeleccionado;
             this.clienteSeleccionado = new UsuarioDTO();
             this.clienteSeleccionado.setIdUsuario(cliente.getIdUsuario());
@@ -108,13 +105,12 @@ public class ClienteBean implements Serializable {
     
     private void crearNuevoCliente() {
         try {
-            // Verificar que el correo no exista
+           
             if (usuarioDAO.existeCorreo(clienteSeleccionado.getCorreo())) {
                 mostrarMensaje("El correo electrónico ya está registrado", FacesMessage.SEVERITY_WARN);
                 return;
             }
-            
-            // Encriptar contraseña
+
             String contrasenaEncriptada = (clienteSeleccionado.getContrasena());
             clienteSeleccionado.setContrasena(contrasenaEncriptada);
             

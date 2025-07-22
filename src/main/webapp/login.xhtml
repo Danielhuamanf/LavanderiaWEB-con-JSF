@@ -179,7 +179,7 @@
 
     <h:body>
         <div class="login-container">
-            <!-- Lado izquierdo - Imagen/Logo -->
+            
             <div class="login-left">
                 <div class="logo-container">
                     <i class="pi pi-shopping-cart"></i>
@@ -188,15 +188,15 @@
                 <p>Tu servicio de lavandería de confianza. Calidad y rapidez en cada prenda.</p>
             </div>
 
-            <!-- Lado derecho - Formulario -->
+            
             <div class="login-right">
                 <h:form id="loginForm">
                     <h1 class="login-title">Iniciar Sesión</h1>
 
-                    <!-- Mensajes globales -->
+                    
                     <p:messages id="messages" showDetail="false" closable="true" />
 
-                    <!-- Campo Email -->
+                    
                     <div class="field-group">
                         <label class="field-label" for="correo">Correo Electrónico</label>
                         <p:inputText id="correo" 
@@ -213,7 +213,6 @@
                         <p:message for="correo" display="text" />
                     </div>
 
-                    <!-- Campo Contraseña -->
                     <div class="field-group">
                         <label class="field-label" for="contrasena">Contraseña</label>
                         <p:password id="contrasena" 
@@ -226,14 +225,12 @@
                         <p:message for="contrasena" display="text" />
                     </div>
 
-                    <!-- Botón Ingresar -->
                     <p:commandButton value="Ingresar" 
                                      action="#{loginBean.login}"
                                      update="messages"
                                      icon="pi pi-sign-in"
                                      styleClass="ui-button-lg" />
 
-                    <!-- Enlace a registro -->
                     <div class="register-link">
                         <p>¿No tienes cuenta? 
                             <h:link outcome="/registro.xhtml?faces-redirect=true" value="Registrate aquí" />

@@ -12,8 +12,7 @@ import java.util.List;
 
 
 public class UsuarioDAOImpl implements UsuarioDAO {
-    
-    // Consultas SQL
+
     private static final String INSERT_USUARIO = 
         "INSERT INTO usuarios (nombre, correo, telefono, direccion, contrasena, rol) VALUES (?, ?, ?, ?, ?, ?)";
     
@@ -55,7 +54,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             stmt.setString(2, usuario.getCorreo());
             stmt.setString(3, usuario.getTelefono());
             stmt.setString(4, usuario.getDireccion());
-            stmt.setString(5, usuario.getContrasena()); // Ya debe venir encriptada
+            stmt.setString(5, usuario.getContrasena()); 
             stmt.setString(6, usuario.getRol());
             
             int resultado = stmt.executeUpdate();
@@ -64,28 +63,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-    
-    @Override
-    public UsuarioDTO autenticarUsuario(String correo, String contrasena) {
-        try (Connection conn = PostgreSQLConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_USUARIO_BY_CORREO)) {
-            
-            stmt.setString(1, correo);
-            ResultSet rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                String contrasenaDB = rs.getString("contrasena");
-               
-                return crearUsuarioDesdeResultSet(rs);
-                
-            }
-            return null;
-            
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
         }
     }
     

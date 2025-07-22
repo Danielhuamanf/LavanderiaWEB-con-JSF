@@ -43,11 +43,7 @@ public class NavigationController {
         }
     }
    
-    public static void guardarUsuarioEnSesion(UsuarioDTO usuario) {
-        HttpSession session = obtenerSesion();
-        session.setAttribute(USUARIO_SESSION, usuario);
-        session.setAttribute(ROL_SESSION, usuario.getRol());
-    }
+    
     public static void cerrarSesion() {
         HttpSession session = obtenerSesion();
         session.invalidate();

@@ -125,9 +125,6 @@ public class PedidoDAOImpl implements PedidoDAO {
         return false;
     }
     
-    /**
-     * Método auxiliar para mapear ResultSet a PedidoDTO
-     */
     private PedidoDTO mapearResultSetAPedido(ResultSet rs) throws SQLException {
         PedidoDTO pedido = new PedidoDTO();
         
@@ -158,12 +155,11 @@ public class PedidoDAOImpl implements PedidoDAO {
         if (estados == null || estados.isEmpty()) {
             return pedidos;
         }
-        
-        // Crear placeholders para la consulta IN
+
         StringBuilder placeholders = new StringBuilder();
         for (int i = 0; i < estados.size(); i++) {
             if (i > 0) placeholders.append(", ");
-            placeholders.append("?");
+            placeholders.append("?");  
         }
         
         String sql = "SELECT p.*, s.nombre_servicio, u.nombre as nombre_usuario " +
@@ -177,8 +173,7 @@ public class PedidoDAOImpl implements PedidoDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setInt(1, idUsuario);
-            
-            // Establecer los parámetros para los estados
+
             for (int i = 0; i < estados.size(); i++) {
                 stmt.setString(i + 2, estados.get(i));
             }

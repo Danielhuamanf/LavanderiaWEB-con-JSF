@@ -109,7 +109,7 @@
 
                         <p:commandButton  
                             value="Cerrar Sesión"
-                            action="#{adminBean.cerrarSesion}"
+                            action="#{loginBean.logout()}"
                             icon="pi pi-sign-out"
                             styleClass="btn me-2"
                             style="background-color: #764ba2; color: white; border: none;"
@@ -121,12 +121,10 @@
         <f:view>
            
             <h:form id="form">
-                <!-- Mensajes globales -->
             <p:growl id="growl" showDetail="true" life="4000" />
             
                 <p:panel header="Gestión de Clientes" styleClass="ui-panel-titlebar">
 
-                    <!-- Barra de herramientas -->
                     <div class="table-toolbar">
                         <div class="toolbar-left">
                             <p:commandButton value="Nuevo Cliente" 
@@ -146,7 +144,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabla de clientes -->
                     <p:dataTable id="tablaClientes" 
                                  var="cliente" 
                                  value="#{clienteBean.clientes}"
@@ -166,7 +163,6 @@
                                  reflow="true"
                                  styleClass="ui-table-responsive">
 
-                        <!-- Encabezado con filtro global -->
                         <f:facet name="header">
                             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
                                 <span style="font-weight: bold; font-size: 1.1em;">Lista de Clientes</span>
@@ -177,12 +173,10 @@
                             </div>
                         </f:facet>
 
-                        <!-- Columna de selección -->
                         <p:column  
                             style="width:40px;text-align:center" 
                             exportable="false" />
 
-                        <!-- Columna ID -->
                         <p:column headerText="ID" 
                                   sortBy="#{cliente.idUsuario}" 
                                   filterBy="#{cliente.idUsuario}"
@@ -190,7 +184,6 @@
                             <h:outputText value="#{cliente.idUsuario}" />
                         </p:column>
 
-                        <!-- Columna Nombre -->
                         <p:column headerText="Nombre Completo" 
                                   sortBy="#{cliente.nombre}" 
                                   filterBy="#{cliente.nombre}"
@@ -198,7 +191,6 @@
                             <h:outputText value="#{cliente.nombre}" />
                         </p:column>
 
-                        <!-- Columna Correo -->
                         <p:column headerText="Correo Electrónico" 
                                   sortBy="#{cliente.correo}" 
                                   filterBy="#{cliente.correo}"
@@ -206,7 +198,6 @@
                             <h:outputText value="#{cliente.correo}" />
                         </p:column>
 
-                        <!-- Columna Teléfono -->
                         <p:column headerText="Teléfono" 
                                   sortBy="#{cliente.telefono}" 
                                   filterBy="#{cliente.telefono}"
@@ -215,7 +206,6 @@
                             <h:outputText value="#{cliente.telefono}" />
                         </p:column>
 
-                        <!-- Columna Dirección -->
                         <p:column headerText="Dirección" 
                                   sortBy="#{cliente.direccion}" 
                                   filterBy="#{cliente.direccion}"
@@ -223,7 +213,6 @@
                             <h:outputText value="#{cliente.direccion}" />
                         </p:column>
 
-                        <!-- Columna Acciones -->
                         <p:column headerText="Acciones" 
                                   exportable="false" 
                                   style="width:120px;text-align:center;">
@@ -254,7 +243,6 @@
 
                 </p:panel>
 
-                <!-- Diálogo para crear/editar cliente -->
                 <p:dialog id="dlgClientePanel" 
                           header="#{clienteBean.modoEdicion ? 'Editar Cliente' : 'Nuevo Cliente'}" 
                           widgetVar="dlgCliente" 
@@ -268,7 +256,6 @@
                     <p:panel style="border: none;">
                         <div class="form-grid">
 
-                            <!-- Nombre -->
                             <div class="required-field">
                                 <p:outputLabel for="nombre" value="Nombre Completo:" />
                                 <p:inputText id="nombre" 
@@ -280,7 +267,6 @@
                                 <p:message for="nombre" />
                             </div>
 
-                            <!-- Teléfono -->
                             <div class="required-field">
                                 <p:outputLabel for="telefono" value="Teléfono:" />
                                 <p:inputText id="telefono" 
@@ -292,7 +278,6 @@
                                 <p:message for="telefono" />
                             </div>
 
-                            <!-- Correo -->
                             <div class="required-field form-grid-full">
                                 <p:outputLabel for="correo" value="Correo Electrónico:" />
                                 <p:inputText id="correo" 
@@ -305,7 +290,6 @@
                                 <p:message for="correo" />
                             </div>
 
-                            <!-- Dirección -->
                             <div class="required-field form-grid-full">
                                 <p:outputLabel for="direccion" value="Dirección:" />
                                 <p:inputTextarea id="direccion" 
@@ -318,7 +302,6 @@
                                 <p:message for="direccion" />
                             </div>
 
-                            <!-- Contraseña (solo en modo creación) -->
                             <div class="required-field" style="#{clienteBean.modoEdicion ? 'display: none;' : ''}">
                                 <p:outputLabel for="contrasena" value="Contraseña:" />
                                 <p:password id="contrasena" 
@@ -332,7 +315,6 @@
                                 <p:message for="contrasena" />
                             </div>
 
-                            <!-- Confirmar Contraseña (solo en modo creación) -->
                             <div class="required-field" style="#{clienteBean.modoEdicion ? 'display: none;' : ''}">
                                 <p:outputLabel for="confirmarContrasena" value="Confirmar Contraseña:" />
                                 <p:password id="confirmarContrasena" 
@@ -367,7 +349,6 @@
 
                 </p:dialog>
 
-                <!-- Diálogo de confirmación para eliminación individual -->
                 <p:confirmDialog id="dlgConfirmarEliminacionIndividual"
                                  header="Confirmar Eliminación" 
                                  message="¿Está seguro de que desea eliminar el cliente #{clienteBean.clienteSeleccionado.nombre}?"

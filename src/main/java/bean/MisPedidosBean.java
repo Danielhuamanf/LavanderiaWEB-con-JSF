@@ -28,34 +28,24 @@ public class MisPedidosBean implements Serializable {
         cargarPedidos();
     }
     
-   
-    
-    /**
-     * Carga los pedidos del usuario logueado separados por estado
-     */
+ 
     private void cargarPedidos() {
         usuarioLogueado = (UsuarioDTO) FacesContext.getCurrentInstance()
                 .getExternalContext().getSessionMap().get("usuario");
         PedidoDAO pedidoDAO = new PedidoDAOImpl();
-        
-        // Cargar pedidos activos (Pendiente, En proceso, Listo para entrega, Entregado)
+ 
         pedidosActivos = pedidoDAO.obtenerPedidosPorUsuarioYEstados(
             usuarioLogueado.getIdUsuario(), 
             Arrays.asList("Pendiente", "En proceso", "Listo para entrega", "Entregado")
         );
-        
-        // Cargar pedidos cancelados (solo Cancelado)
+
         pedidosCancelados = pedidoDAO.obtenerPedidosPorUsuarioYEstados(
             usuarioLogueado.getIdUsuario(), 
             Arrays.asList("Cancelado")
         );
     }
     
-    /**
-     * Obtiene la clase CSS para el badge según el estado del pedido
-     * @param estado Estado del pedido
-     * @return Clase CSS correspondiente
-     */
+
     public String obtenerClaseBadge(String estado) {
         if (estado == null) return "badge bg-secondary";
         
@@ -75,11 +65,7 @@ public class MisPedidosBean implements Serializable {
         }
     }
     
-    /**
-     * Obtiene el texto del badge según el estado
-     * @param estado Estado del pedido
-     * @return Texto a mostrar en el badge
-     */
+   
     public String obtenerTextoBadge(String estado) {
         if (estado == null) return "Sin estado";
         
@@ -110,9 +96,7 @@ public class MisPedidosBean implements Serializable {
         return LOGIN_PAGE+"?faces-redirect=true";
     }
     
-    /**
-     * Refresca la lista de pedidos
-     */
+    
     public void refrescarPedidos() {
         cargarPedidos();
     }

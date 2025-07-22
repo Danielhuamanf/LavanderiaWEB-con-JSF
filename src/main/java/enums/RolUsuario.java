@@ -1,8 +1,5 @@
 package enums;
 
-/**
- * Enum para definir los roles de usuario del sistema
- */
 public enum RolUsuario {
     CLIENTE("cliente"),
     ADMINISTRADOR("administrador");

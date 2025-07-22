@@ -29,7 +29,6 @@ public class LoginBean implements Serializable {
     public String login() {
         try {
             
-            // Buscar usuario por correo
             UsuarioDTO usuario = usuarioDAO.buscarPorCorreo(correo.trim());
 
             if (!contrasena.equals(usuario.getContrasena())) {
@@ -39,7 +38,6 @@ public class LoginBean implements Serializable {
 
             this.usuarioLogueado = usuario;
 
-            // GUARDAR USUARIO EN SESIÓN
             FacesContext.getCurrentInstance()
                     .getExternalContext().getSessionMap()
                     .put("usuario", usuarioLogueado);
